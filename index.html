@@ -47,6 +47,30 @@
                 console.error("Помилка збереження:", error);
             });
         }
+
+        // Функція для отримання даних з Firestore і відображення їх у таблиці
+        function loadData() {
+            db.collection("tableData").orderBy("timestamp", "desc").limit(1).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data().rows;
+                    const rows = document.querySelectorAll("tbody tr");
+
+                    data.forEach((rowData, rowIndex) => {
+                        const row = rows[rowIndex];
+                        Object.keys(rowData).forEach((key, cellIndex) => {
+                            row.querySelectorAll("input")[cellIndex].value = rowData[key];
+                        });
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error("Помилка отримання даних:", error);
+            });
+        }
+
+        // Викликати функцію завантаження даних після завантаження сторінки
+        window.onload = loadData;
     </script>
 </head>
 <body>
