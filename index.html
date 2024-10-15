@@ -52,23 +52,29 @@
 
         // Функція для отримання даних з Firestore і відображення їх у таблиці
         function loadData() {
+            console.log("Виклик функції loadData()"); // Перевірка виклику функції
             db.collection("tableData").orderBy("timestamp", "desc").limit(1).get()
             .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data().rows;
-                    const rows = document.querySelectorAll("tbody tr");
+                if (!querySnapshot.empty) {
+                    console.log("Дані знайдено"); // Перевірка наявності даних
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data().rows;
+                        const rows = document.querySelectorAll("tbody tr");
 
-                    if (data && data.length > 0) {
-                        data.forEach((rowData, rowIndex) => {
-                            const row = rows[rowIndex];
-                            Object.keys(rowData).forEach((key, cellIndex) => {
-                                row.querySelectorAll("input")[cellIndex].value = rowData[key];
+                        if (data && data.length > 0) {
+                            data.forEach((rowData, rowIndex) => {
+                                const row = rows[rowIndex];
+                                Object.keys(rowData).forEach((key, cellIndex) => {
+                                    row.querySelectorAll("input")[cellIndex].value = rowData[key];
+                                });
                             });
-                        });
-                    } else {
-                        console.log("Дані не знайдено.");
-                    }
-                });
+                        } else {
+                            console.log("Дані відсутні або порожні");
+                        }
+                    });
+                } else {
+                    console.log("Запит не знайшов даних у Firestore");
+                }
             })
             .catch((error) => {
                 console.error("Помилка отримання даних:", error);
