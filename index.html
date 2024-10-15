@@ -18,37 +18,37 @@
             appId: "1:55747512921:web:6af7fb59c0a3e26442ff48"
         };
 
-        // Ініціалізація Firebase
-        firebase.initializeApp(firebaseConfig);
-        
-        // Ініціалізація Firestore
-        const db = firebase.firestore();
+       // Ініціалізація Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Ініціалізація Firestore
+    const db = firebase.firestore();
 
-        // Функція для збереження даних у Firestore
-        function saveData() {
-            let tableData = [];
-            const rows = document.querySelectorAll("tbody tr");
+    // Функція для збереження даних у Firestore
+    function saveData() {
+        let tableData = [];
+        const rows = document.querySelectorAll("tbody tr");
 
-            rows.forEach((row, rowIndex) => {
-                let rowData = {};
-                row.querySelectorAll("input").forEach((cell, cellIndex) => {
-                    rowData[`cell_${rowIndex + 1}_${cellIndex + 1}`] = cell.value;
-                });
-                tableData.push(rowData);
+        rows.forEach((row, rowIndex) => {
+            let rowData = {};
+            row.querySelectorAll("input").forEach((cell, cellIndex) => {
+                rowData[`cell_${rowIndex + 1}_${cellIndex + 1}`] = cell.value;
             });
+            tableData.push(rowData);
+        });
 
-            // Зберегти дані у Firestore
-            db.collection("tableData").add({
-                rows: tableData,
-                timestamp: new Date()
-            })
-            .then(() => {
-                alert("Дані успішно збережено у Firebase!");
-            })
-            .catch((error) => {
-                console.error("Помилка збереження:", error);
-            });
-        }
+        // Зберегти дані у Firestore
+        db.collection("tableData").add({
+            rows: tableData,
+            timestamp: new Date()
+        })
+        .then(() => {
+            alert("Дані успішно збережено у Firebase!");
+        })
+        .catch((error) => {
+            console.error("Помилка збереження:", error);
+        });
+    }
 
         // Функція для отримання даних з Firestore і відображення їх у таблиці
         function loadData() {
