@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js"></script>
     <script>
-        // Вставте свою конфігурацію Firebase тут
+        // Конфігурація Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyD3lDodPNLj9r4BcoLTqx7ixPDsHV4p96I",
             authDomain: "vidomist.firebaseapp.com",
@@ -19,7 +19,9 @@
         };
 
         // Ініціалізація Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
+        
+        // Ініціалізація Firestore
         const db = firebase.firestore();
 
         // Функція для збереження даних у Firestore
@@ -56,21 +58,22 @@
                     const data = doc.data().rows;
                     const rows = document.querySelectorAll("tbody tr");
 
-                    data.forEach((rowData, rowIndex) => {
-                        const row = rows[rowIndex];
-                        Object.keys(rowData).forEach((key, cellIndex) => {
-                            row.querySelectorAll("input")[cellIndex].value = rowData[key];
+                    if (data && data.length > 0) {
+                        data.forEach((rowData, rowIndex) => {
+                            const row = rows[rowIndex];
+                            Object.keys(rowData).forEach((key, cellIndex) => {
+                                row.querySelectorAll("input")[cellIndex].value = rowData[key];
+                            });
                         });
-                    });
+                    } else {
+                        console.log("Дані не знайдено.");
+                    }
                 });
             })
             .catch((error) => {
                 console.error("Помилка отримання даних:", error);
             });
         }
-
-        // Викликати функцію завантаження даних після завантаження сторінки
-        window.onload = loadData;
     </script>
 </head>
 <body>
@@ -100,6 +103,8 @@
         </table>
         <br>
         <button type="button" onclick="saveData()">Зберегти інформацію</button>
+        <!-- Додати кнопку для витягування даних з Firebase -->
+        <button type="button" onclick="loadData()">Витягнути дані з Firebase</button>
     </form>
 </body>
 </html>
